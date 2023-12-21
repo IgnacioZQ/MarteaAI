@@ -31,7 +31,7 @@ from streamlit_chat import message
 
 # Cargar datos
 
-df = pd.read_csv("Original\\Data\\video_games_sales.csv")
+df = pd.read_csv("Original\\MarteaAI\\Data\\video_games_sales.csv")
 
 # Conectar API
 
