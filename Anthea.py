@@ -15,8 +15,6 @@ import os
 import matplotlib.pyplot as plt 
 import seaborn as sns
 import pandas as pd
-from pandasai.llm import OpenAI
-from pandasai import SmartDataframe
 
 # Otros
 import env
