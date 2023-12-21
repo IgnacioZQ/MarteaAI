@@ -5,3 +5,7 @@ langchain_experimental
 langchain
 matplotlib
 seaborn
+langchain.agents.agent_types
+langchain.chat_models
+seaborn
+env
