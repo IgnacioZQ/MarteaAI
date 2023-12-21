@@ -3,5 +3,3 @@ pandas
 numpy
 langchain_experimental
 langchain
-matplotlib
-seaborn
