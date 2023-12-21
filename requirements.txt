@@ -1,5 +1,4 @@
 streamlit
 pandas
 numpy
-langchain_experimental.agents
-create_pandas_dataframe_agent
+langchain_experimental
