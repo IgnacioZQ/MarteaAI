@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Otros
+
 import env
 import os
 
@@ -39,7 +40,7 @@ os.environ["OPENAI_API_KEY"] = env.OPENAI_API_KEY
 
 Anthea = create_pandas_dataframe_agent(
     ChatOpenAI(temperature = 0,
-               model = "gpt-4",
+               model = env.MODEL,
                openai_organization = "org-4K9pPkXLsBYD9znBj07fnte2"),
     df,
     verbose = True,
