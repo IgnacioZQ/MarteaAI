@@ -35,7 +35,7 @@ Anthea = create_pandas_dataframe_agent(
     ChatOpenAI(
         temperature=0,
         model="gpt-4",
-        api_key= "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" # Utiliza la variable de entorno openai_api_key
+        api_key=  # Utiliza la variable de entorno openai_api_key, copiar aqui la clave
     ),
     pd.DataFrame(),  # Inicializar DataFrame vacío
     verbose=True,
@@ -52,9 +52,23 @@ Observacion: No preguntes al final si necesito ayuda para seguir.
 #{question}
 """
 
-def consulta(input_usuario):
-    consulta = formato.format(question=input_usuario)
-    resultado = Anthea.run(consulta)
+def consulta(input_usuario, dataframe):
+    formato = """
+    Data una pregunta del usuario:
+    1. Crea una consulta para DataFrame.
+    2. Revisa los resultados e interpretalos.
+    3. Devuelve el dato.
+    4. si tienes que hacer alguna aclaración o devolver cualquier texto que sea siempre en español y claro.
+    Observacion: No preguntes al final si necesito ayuda para seguir.
+    #{question}
+    """
+
+    # Crear el prompt específico para la pregunta y el DataFrame
+    pregunta_completa = formato.format(question=input_usuario)
+    prompt = f"{pregunta_completa}\n\nDataFrame:\n{dataframe.to_string(index=False)}"
+
+    # Realizar la consulta al agente
+    resultado = Anthea.run(prompt)
     return resultado
 
 def obtener_prompt_especifico(ruta_archivo):
@@ -67,12 +81,13 @@ def obtener_prompt_especifico(ruta_archivo):
     }
 
 def generar_pdf_reporte(df):
-    # Realizar la consulta con el DataFrame proporcionado
-    respuestas = {
-        "Inicio": consulta("Inicio"),  
-        "Relevantes": consulta("Relevantes"),
-        "Que_Hacer": consulta("Que_Hacer"),
-    }
+    # Verificar si el DataFrame tiene columnas
+    if df.empty or df.columns.empty:
+        return "El DataFrame no contiene datos o columnas."
+
+    # Consultar al agente con la pregunta inicial y el DataFrame
+    pregunta_inicial = "Revisa estos datos, describelos detalladamente y da sugerencias de cómo puedo organizarlos para una correcta gestión"
+    respuesta_inicial = consulta(pregunta_inicial, df)
 
     # Inicializar objeto de documento
     buffer = BytesIO()
@@ -92,9 +107,8 @@ def generar_pdf_reporte(df):
     # Añadir prefacio al PDF
     elementos.append(Paragraph("Este reporte fue generado por Anthea, una asistente de análisis de datos creada en Marte para apoyar a todos los analistas y no analistas de todo el universo que deseen obtener conocimiento de sus datos.", estilo_normal))
 
-    # Añadir respuestas al PDF
-    for pregunta, respuesta in respuestas.items():
-        elementos.append(Paragraph(f"{pregunta}: {respuesta}", estilo_normal))
+    # Añadir respuesta al PDF
+    elementos.append(Paragraph(f"{pregunta_inicial}: {respuesta_inicial}", estilo_normal))
 
     # Añadir marca de agua al PDF
     logo_path = os.path.join(settings.MEDIA_ROOT, 'Logo.jpeg')
@@ -114,6 +128,10 @@ def generar_pdf_reporte(df):
 
     return os.path.join(settings.MEDIA_ROOT, 'Reporte.pdf')
 
+# ...
+
+# ...
+
 @csrf_exempt
 def cargar_analizar_datos(request):
     if request.method == 'POST' and request.FILES.get('archivo'):
@@ -125,9 +143,22 @@ def cargar_analizar_datos(request):
             with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as temp_file:
                 temp_file.write(archivo.read())
 
-            # Leer el DataFrame desde el archivo temporal
-            df = pd.read_csv(temp_file.name)
+            # Imprimir el contenido del archivo temporal
+            with open(temp_file.name, 'r') as temp_file_read:
+                print("Contenido del archivo temporal:")
+                print(temp_file_read.read())
+
+            # Leer el DataFrame desde el archivo temporal sin incluir el índice
+            df = pd.read_csv(temp_file.name, index_col=False)
             
+            # Imprimir las primeras filas del DataFrame para verificar
+            print("Primeras filas del DataFrame:")
+            print(df.head())
+
+            # Visualizar el DataFrame antes de la descripción
+            print("DataFrame antes de la descripción:")
+            print(df)
+
             # Realizar el análisis de datos y generar el PDF
             reporte_pdf = generar_pdf_reporte(df)
 
@@ -143,6 +174,9 @@ def cargar_analizar_datos(request):
         return response
 
     return JsonResponse({'error': 'Se esperaba un archivo en la solicitud POST.'})
+
+
+
 
 # Vista para el modelo Feedback
 class FeedbackView(viewsets.ModelViewSet):
