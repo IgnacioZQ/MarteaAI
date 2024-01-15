@@ -27,7 +27,7 @@ Anthea = create_pandas_dataframe_agent(
     ChatOpenAI(
         temperature=0,
         model="gpt-3.5-turbo",  # Cambiar el modelo a "gpt-3.5-turbo"
-        api_key=  # Utiliza la variable de entorno openai_api_key, copiar aqui la clave
+        api_key="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"  # Utiliza la variable de entorno openai_api_key, copiar aqui la clave
     ),
     pd.DataFrame(),  # Inicializar DataFrame vacío
     verbose=True,
@@ -40,6 +40,7 @@ formato = """
 2. Realiza un análisis exploratorio de datos EDA para el archivo {question} y proporciona un reporte con los resultados.
 Si ves espacios vacíos o errores en el documento, corrígelos y realiza el análisis con los datos que estén.
 3. ¿Hay algo específico que te gustaría destacar en estos datos tras realizar el análisis exploratorio de datos EDA?
+4. ¿Has notado algún patrón o tendencia interesante en los datos tras realizar el análisis exploratorio de datos EDA?
 5. Después de tu análisis exploratorio de datos EDA, crea Insights Valiosos para el archivo {question}
 ¡Recuerda, debes proporcionar un reporte como si fueras un analista de datos en tercera persona y en español!
 #{question}
