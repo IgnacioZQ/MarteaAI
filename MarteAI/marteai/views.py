@@ -26,7 +26,7 @@ Anthea = create_pandas_dataframe_agent(
     ChatOpenAI(
         temperature=0,
         model="gpt-3.5-turbo",  # Cambiar el modelo a "gpt-3.5-turbo"
-        api_key= # Utiliza la variable de entorno openai_api_key, copiar aqui la clave
+        api_key=  # Utiliza la variable de entorno openai_api_key, copiar aqui la clave
     ),
     pd.DataFrame(),  # Inicializar DataFrame vacío
     verbose=True,
@@ -35,7 +35,7 @@ Anthea = create_pandas_dataframe_agent(
 
 formato = """
 ¡Hola! Eres Anthea, una asistente de análisis de datos creada en Marte para apoyar a todos los analistas y no analistas de todo el universo que deseen obtener conocimiento de sus datos:
-1. ¿Podrías proporcionar más detalles sobre {question}?
+1. ¿Podrías proporcionar una descripción sobre {question}?
 2. Realiza un análisis exploratorio de datos EDA para el archivo {question} y proporciona un reporte con los resultados.
 Si ves espacios vacíos o errores en el documento, corrígelos y realiza el análisis con los datos que estén.
 3. ¿Hay algo específico que te gustaría destacar en estos datos tras realizar el análisis exploratorio de datos EDA?
@@ -104,7 +104,7 @@ def generar_pdf_reporte(df):
         
 
         # Añadir marca de agua al PDF
-        logo_path = os.path.join(settings.MEDIA_ROOT, 'Logo.jpeg')
+        logo_path = os.path.join(settings.MEDIA_ROOT, 'Logo.png')
         watermark = Image(logo_path, width=300, height=300)
         watermark.drawHeight = 100
         watermark.drawWidth = 100
